@@ -20,7 +20,42 @@ public class Steering
         
         Vector3 desired = direction.normalized * agent.movement.maxSpeed; ;
         Vector3 steer = desired - agent.movement.velocity;
+
         Vector3 force = Vector3.ClampMagnitude(steer, agent.movement.maxForce);
+
+        return force;
+    }
+
+    public static Vector3 Wander(AutomonousAgent agent)
+    {
+        // randomly adjust angle +/- displacement 
+        agent.wanderAngle = agent.wanderAngle + Random.Range(-
+       agent.wanderDisplacement, agent.wanderDisplacement);
+        // create rotation quaternion around y-axis (up) 
+        Quaternion rotation = Quaternion.AngleAxis(agent.wanderAngle, Vector3.up);
+        // calculate point on circle radius 
+        Vector3 point = rotation * (Vector3.forward * agent.wanderRadius);
+        // set point in front of agent at distance length 
+        Vector3 forward = agent.transform.forward * agent.wanderDistance;
+
+        Vector3 force = CalculateSteering(agent, forward + point);
+        Debug.DrawRay(agent.transform.position, Vector3.forward + point, Color.red);
+
+        return force;
+    }
+
+    public static Vector3 Cohesion(Agent agent, GameObject[] neighbors)
+    {
+        // Get center posistion of nieghbors
+        Vector3 center = Vector3.zero;
+        foreach (GameObject neighbor in neighbors)
+        {
+            center += neighbor.transform.position;
+        }
+
+        center /= neighbors.Length;
+
+        Vector3 force = CalculateSteering(agent, center - agent.transform.position);
 
         return force;
     }

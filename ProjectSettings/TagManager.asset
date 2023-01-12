@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Agent01
+  - Agent02
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Spawn
   - Water
   - UI
   - 
