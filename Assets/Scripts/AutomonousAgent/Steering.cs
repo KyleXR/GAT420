@@ -26,17 +26,16 @@ public class Steering
         return force;
     }
 
-    public static Vector3 Wander(AutomonousAgent agent)
+    public static Vector3 Wander(AutonomousAgent agent)
     {
         // randomly adjust angle +/- displacement 
-        agent.wanderAngle = agent.wanderAngle + Random.Range(-
-       agent.wanderDisplacement, agent.wanderDisplacement);
+        agent.wanderAngle = agent.wanderAngle + Random.Range(-agent.data.wanderDisplacement, agent.data.wanderDisplacement);
         // create rotation quaternion around y-axis (up) 
         Quaternion rotation = Quaternion.AngleAxis(agent.wanderAngle, Vector3.up);
         // calculate point on circle radius 
-        Vector3 point = rotation * (Vector3.forward * agent.wanderRadius);
+        Vector3 point = rotation * (Vector3.forward * agent.data.wanderRadius);
         // set point in front of agent at distance length 
-        Vector3 forward = agent.transform.forward * agent.wanderDistance;
+        Vector3 forward = agent.transform.forward * agent.data.wanderDistance;
 
         Vector3 force = CalculateSteering(agent, forward + point);
         Debug.DrawRay(agent.transform.position, Vector3.forward + point, Color.red);
@@ -56,6 +55,46 @@ public class Steering
         center /= neighbors.Length;
 
         Vector3 force = CalculateSteering(agent, center - agent.transform.position);
+
+        return force;
+    }
+
+    public static Vector3 Seperation(Agent agent, GameObject[] neighbors, float radius)
+    {
+        Vector3 separation = Vector3.zero;
+        // accumulate separation vector of neighbors 
+        foreach (GameObject neighbor in neighbors)
+        {
+            // create separation direction (neighbor position <- agent position) 
+            Vector3 direction = neighbor.transform.position - agent.transform.position; //< get vector that points to neighbor from agent >;
+            if (direction.sqrMagnitude < radius ) 
+  {
+                // scale direction by distance (closer = stronger) 
+                separation += direction / direction.sqrMagnitude;
+            }
+        }
+
+        // steer toward separation 
+        Vector3 force = CalculateSteering(agent, separation);
+
+        return force;
+    }
+
+    public static Vector3 Alignment(Agent agent, GameObject[] neighbors)
+    {
+        Vector3 averageVelocity = Vector3.zero;
+        // accumulate velocity of neighbors (velocity = forward direction movement) 
+        foreach (GameObject neighbor in neighbors)
+        {
+            // need to get the Agent component of the game object and then movement velocity 
+            averageVelocity += neighbor.GetComponent<Agent>().movement.velocity;
+        }
+        // calculate the average by dividing the average velocity by the number of 
+        averageVelocity /= neighbors.Length;
+         
+
+         // steer towards the average velocity of the neighbors 
+         Vector3 force = CalculateSteering(agent, averageVelocity);
 
         return force;
     }
