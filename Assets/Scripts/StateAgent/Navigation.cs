@@ -34,5 +34,13 @@ public class Navigation : MonoBehaviour
 		return squaredRangeA.CompareTo(squaredRangeB);
 	}
 
+    public NavNode GetNearestNodeWithTag(string tag)
+    {
+        var nodes = NavNode.GetNodesWithTag(tag).ToList();
+        SortByDistance(nodes);
+
+        return (nodes.Count == 0) ? null : nodes[0];
+    }
+
 
 }

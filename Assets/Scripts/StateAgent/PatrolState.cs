@@ -11,13 +11,14 @@ public class PatrolState : State
 
     public override void OnEnter()
     {
-        Debug.Log("Patrol Enter");
+        owner.movement.Resume();
+        owner.navigation.targetNode = owner.navigation.GetNearestNode();
         
     }
 
     public override void OnExit()
     {
-        Debug.Log("Patrol Exit");
+        
     }
 
     public override void OnUpdate()
