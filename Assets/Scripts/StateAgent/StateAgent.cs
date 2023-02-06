@@ -6,13 +6,15 @@ public class StateAgent : Agent
 {
     public StateMachine stateMachine = new StateMachine();
     public GameObject[] perceived;
-    public Camera mainCamera;
+    private Camera mainCamera;
 
     void Start()
     {
         stateMachine.AddState(new IdleState(this));
         stateMachine.AddState(new PatrolState(this));
         stateMachine.AddState(new ChaseState(this));
+        stateMachine.AddState(new WanderState(this));
+        stateMachine.AddState(new AttackState(this));
         stateMachine.StartState(nameof(IdleState));
     }
 

@@ -6,7 +6,7 @@ public class SphereCastPerception : Perception
 {
     public Transform raycastTransform;
     [Range(2, 50)] public int numRaycast = 2;
-    [Range(1, 10)] public float radius = 1;
+    [Range(0.1f, 10)] public float radius = 1;
 
     public override GameObject[] GetGameObjects()
     {
