@@ -10,6 +10,8 @@ public class StateAgent : Agent
 
     void Start()
     {
+        mainCamera = Camera.main;
+
         stateMachine.AddState(new IdleState(this));
         stateMachine.AddState(new PatrolState(this));
         stateMachine.AddState(new ChaseState(this));
