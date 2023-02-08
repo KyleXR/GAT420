@@ -24,20 +24,11 @@ public class PatrolState : State
 
     public override void OnExit()
     {
-        
+       
     }
 
     public override void OnUpdate()
     {
-        timer -= Time.deltaTime;
-        if(timer <= 0)
-        {
-            owner.stateMachine.StartState(nameof(WanderState));
-        }
-
-        if (owner.perceived.Length > 0)
-        {
-            owner.stateMachine.StartState(nameof(ChaseState));
-        }
+      
     }
 }
