@@ -29,6 +29,16 @@ public class StateMachine
                 }
             }
         }
+
+        foreach(var transition in anyTransitions)
+        {
+            if(transition.Key.ToTransition())
+            {
+                StartState(transition.Value.name);
+                break;
+            }
+        }
+
         currentState?.OnUpdate();
 	}
 
